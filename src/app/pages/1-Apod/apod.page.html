@@ -1,0 +1,123 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Imagen del Día</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="/tabs/apod/favoritos">
+        <ion-icon name="heart-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <app-menu-global></app-menu-global>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content [fullscreen]="true" class="fondo-1">
+
+  <section class="intro">
+    <span class="eyebrow">NASA · APOD</span>
+
+    <h1>La imagen astronómica del día</h1>
+
+    <p>
+      Explorá la imagen o video astronómico del día, obtenida de la NASA. Podés guardarla en tus favoritos para verla más tarde.
+      Cada día vas a encontrar una nueva imagen o video, así que no dejes de observar.
+    </p>
+</section>
+
+  <!-- Estado de carga -->
+  @if (cargando()) {
+    <div class="nasa-state">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Recibiendo transmisión astronómica...</p>
+    </div>
+  }
+
+  <!-- Card de APOD -->
+  @if (apod() && !cargando()) {
+    <ion-card
+      class="nasa-card">
+      <!-- Imagen -->
+      @if (apod()?.media_type === 'image' && imagenUrl()) {
+        <div
+          class="contenedor-imagen"
+          >
+          <img
+            [src]="imagenUrl()"
+            [alt]="apod()?.alt || apod()?.title"
+            loading="lazy"
+            decoding="async">
+          </div>
+        }
+        <!-- Video -->
+        @if (apod()?.media_type === 'video') {
+          <div
+            class="contenedor-video"
+            >
+            <!-- Video MP4 -->
+            @if (videoUrl() && !esVideoYoutube()) {
+              <video
+                [src]="videoUrl()"
+                controls
+                playsinline
+                preload="metadata">
+              </video>
+            }
+            <!-- Video de YouTube -->
+            @if (esVideoYoutube() && videoYoutubeUrl()) {
+              <iframe
+                [src]="videoYoutubeUrl()"
+                title="Video astronómico del día"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            }
+          </div>
+        }
+        <!-- Fecha y título -->
+        <ion-card-header>
+          <ion-card-subtitle>
+            {{ apod()?.date }}
+          </ion-card-subtitle>
+          <ion-card-title>
+            {{ apod()?.title }}
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+
+          <!-- Descripción -->
+          <div
+            class="descripcion"
+            [innerHTML]="apod()?.explanation">
+          </div>
+
+          <ion-button class="nasa-button" expand="block" (click)="alternarFavorito()">
+            <ion-icon [name]="esFavorito() ? 'heart' : 'heart-outline'" slot="start"></ion-icon>
+            {{ esFavorito() ? 'Quitar de favoritos' : 'Guardar en favoritos' }}
+          </ion-button>
+
+          <!-- Créditos -->
+          @if (apod()?.copyright) {
+            <div
+              class="creditos"
+              >
+              <strong>Copyright: </strong>
+              <span [innerHTML]="apod()?.copyright"></span>
+            </div>
+          }
+        </ion-card-content>
+      </ion-card>
+    }
+
+    <!-- Estado de error -->
+    @if (error() && !cargando()) {
+      <div
+        class="nasa-state error">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error() }}</p>
+      </div>
+    }
+
+  </ion-content>

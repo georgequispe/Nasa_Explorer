@@ -1,0 +1,102 @@
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { NeoService } from '../../services/neo.service';
+import { ObjetoCercano } from '../../models/neo.model';
+
+
+@Component({
+  selector: 'app-neo',
+  templateUrl: 'neo.page.html',
+  styleUrls: ['neo.page.scss'],
+  standalone: false,
+})
+
+
+
+export class NeoPage implements OnInit {
+  private neoService = inject(NeoService);
+
+
+  // Señales
+  objetos = signal<ObjetoCercano[]>([]);
+  cargando = signal<boolean>(true);
+  error = signal<string>('');
+
+  limiteObjetos = 10;
+
+  objetoSeleccionado = signal<ObjetoCercano | null>(null);
+
+  ngOnInit() {
+    this.cargarObjetos();
+  }
+
+  /**
+   * Carga los objetos cercanos a la Tierra para el rango de fechas especificado.
+   */
+  cargarObjetos() {
+    this.cargando.set(true);
+    this.error.set('');
+
+    const hoy = new Date();
+    const fin = new Date();
+    fin.setDate(hoy.getDate() + 2);
+
+    this.neoService
+      .obtenerObjetos(this.formatearFecha(hoy), this.formatearFecha(fin))
+      .subscribe({
+        next: (respuesta) => {
+          // La API agrupa los objetos por fecha: los unimos en una sola lista
+          const lista = Object.values(respuesta.near_earth_objects).flat();
+
+          // Orden por fecha-hora
+          lista.sort((a, b) =>
+            (a.close_approach_data[0]?.epoch_date_close_approach ?? 0) -
+            (b.close_approach_data[0]?.epoch_date_close_approach ?? 0)
+          );
+
+          if (lista.length === 0) {
+            this.error.set('No hay objetos cercanos registrados para estos días.');
+          }
+
+          this.objetos.set(lista.slice(0, this.limiteObjetos));
+          this.cargando.set(false);
+        },
+        error: () => {
+          this.error.set('No se pudieron cargar los objetos cercanos a la Tierra.');
+          this.cargando.set(false);
+        },
+      });
+  }
+
+
+  /**
+   * Devuelve una etiqueta que describe el estado del objeto cercano.
+   * @param nombre Nombre del objeto cercano (ej. "2021 AB")
+   * @returns Descripción   
+   */
+  etiquetaObjeto(nombre: string): string {
+    const texto = nombre.trim();
+
+    let estado = 'Órbita sin confirmar';
+    if (/^\d+\s+[^\s(]/.test(texto)) {
+      estado = 'Con nombre propio';
+    } else if (/^\d+\s*\(/.test(texto)) {
+      estado = 'Órbita confirmada';
+    }
+
+    // Busca el año dentro del código de descubrimiento (ej. "2019 CJ4")
+    const anio = texto.match(/\b(1[89]\d{2}|20\d{2})\s[A-Z]{2}\d*\b/)?.[1];
+
+    return anio ? `Descubierto en ${anio} · ${estado}` : estado;
+  }
+
+  /* Convierte una fecha al formato AAAA-MM-DD que pide la API. */
+  private formatearFecha(fecha: Date): string {
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${fecha.getFullYear()}-${mes}-${dia}`;
+  }
+
+  seleccionarObjeto(objeto: ObjetoCercano) {
+    this.objetoSeleccionado.set(objeto);
+  }
+}

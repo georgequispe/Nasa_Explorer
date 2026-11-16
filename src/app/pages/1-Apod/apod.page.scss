@@ -1,0 +1,37 @@
+/* ========================================
+   VIDEO
+======================================== */
+
+.contenedor-video {
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #010101;
+}
+
+.contenedor-video video,
+.contenedor-video iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+
+/* ========================================
+   CRÉDITOS
+======================================== */
+
+.creditos {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--color-acento-rgb), 0.18);
+
+  color: var(--color-secundario);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.creditos strong {
+  color: var(--color-acento);
+}

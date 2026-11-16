@@ -8,22 +8,29 @@ const routes: Routes = [
     path: '',
     component: TabsPage,
     children: [
+      { 
+        path: '', 
+        redirectTo: 'apod', 
+        pathMatch: 'full' },
       {
-        path: 'tab1',
-        loadChildren: () => import('../pages/1.APOD-tab/tab1.module').then(m => m.Tab1PageModule)
+        path: 'apod',
+        loadChildren: () => import('../pages/1-Apod/apod.module')
+          .then(m => m.ApodPageModule)
       },
       {
-        path: 'tab2',
-        loadChildren: () => import('../pages/2.NEO-tab/tab2.module').then(m => m.Tab2PageModule)
+        path: 'neo',
+        loadChildren: () => import('../pages/2-Neo/neo.module')
+          .then(m => m.NeoPageModule)
       },
       {
-        path: 'tab3',
-        loadChildren: () => import('../pages/3.EONET-tab/tab3.module').then(m => m.Tab3PageModule)
+        path: 'eonet',
+        loadChildren: () => import('../pages/3-Eonet/eonet.module')
+          .then(m => m.EonetPageModule)
       },
       {
-        path: '',
-        redirectTo: 'tab1',
-        pathMatch: 'full'
+        path: 'menu',
+        loadChildren: () => import('../pages/Menu/menu.module')
+          .then(m => m.MenuPageModule)
       }
     ]
   }

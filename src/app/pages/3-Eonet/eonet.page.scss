@@ -1,0 +1,182 @@
+/* ========================================
+   SECCIÓN DEL MAPA
+======================================== */
+
+.map-section {
+  padding: 20px;
+}
+
+.map-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.map-heading h2 {
+  margin: 10px 0 0;
+  color: var(--color-texto);
+  font-family: 'Nasalization', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.map-heading > ion-icon {
+  flex-shrink: 0;
+  color: var(--color-acento);
+  font-size: 28px;
+}
+
+
+/* ========================================
+   FILTROS POR CATEGORÍA
+======================================== */
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.category-filters ion-button {
+  margin: 0;
+
+  --border-radius: 20px;
+  --border-color: rgba(var(--color-acento-rgb), 0.4);
+  --color: var(--color-acento);
+  --background: rgba(var(--color-acento-rgb), 0.08);
+  --box-shadow: none;
+
+  font-size: 12px;
+  text-transform: none;
+}
+
+
+/* ========================================
+   MAPA LEAFLET
+======================================== */
+
+#mapa-eventos {
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+
+  background: var(--color-superficie);
+  border: 1px solid rgba(var(--color-acento-rgb), 0.3);
+  border-radius: 14px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+}
+
+.map-caption {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 12px 0 0;
+
+  color: var(--color-secundario);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.map-caption ion-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-acento);
+  font-size: 17px;
+}
+
+
+/* ========================================
+   UBICACIÓN
+======================================== */
+
+.location-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+}
+
+.location-description {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.location-description > ion-icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--color-acento);
+  font-size: 25px;
+}
+
+.location-description h2 {
+  margin: 0 0 8px;
+  color: var(--color-texto);
+  font-family: 'Nasalization', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.location-description p {
+  margin: 0;
+  color: var(--color-secundario);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.location-message {
+  margin: 0;
+  color: var(--color-error-suave);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.location-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+
+  color: var(--color-secundario);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.location-disclaimer::before {
+  content: 'ⓘ';
+  flex-shrink: 0;
+  color: var(--color-acento);
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 480px) {
+  .map-section,
+  .location-controls {
+    padding: 16px;
+  }
+
+  .map-heading h2 {
+    font-size: 16px;
+  }
+
+  .category-filters {
+    gap: 4px;
+  }
+
+  .category-filters ion-button {
+    font-size: 11px;
+  }
+
+  #mapa-eventos {
+    height: 300px;
+  }
+}
